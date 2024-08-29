@@ -140,15 +140,11 @@ void mergesort<CONTAINER_T>::merge(int lo, int mid, int hi){
     while (i<=mid && j<=hi){
         // Check if vec[i] >= vec[j] : If yes, copy vec[i] value into tmp[k] and advance i and k
         if(this->container[i]>= this->container[j]){ // For ascending order container[lo+i] < container[mid+j]
-	    tmp[k] = this->container[i];
-	    i++;
-	    k++;
+	    tmp[k++] = this->container[i++];
 	}
         // Check if vec[i] < vec[j] : If yes, copy vec[j] value into tmp[k] and advance j and k
         else{
-	    tmp[k] = this->container[j];
-	    j++;
-	    k++;
+	    tmp[k++] = this->container[j++];
 	}
     }
 
