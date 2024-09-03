@@ -1,6 +1,8 @@
 # CPlusPlus
 Basic C++ programming - Basic algos, problems and concepts
 
+bst.cpp      : Binary Search Tree implementation and related ops
+
 heap.cpp     : Heap, Priority Queue, Heapify, Heapsort
 
 linklist.cpp : list ops
