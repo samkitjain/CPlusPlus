@@ -2,7 +2,7 @@
 #include<vector>
 
 using namespace std;
-
+#define HOARES_QUICKSORT_PARTITION 0
 
 /*
  * Goal : Mergesort and Quicksort. Heapsort is covered in heap.cpp
@@ -63,6 +63,7 @@ class quicksort:public sortingutils<CONTAINER_T>, public sortingalgosI<CONTAINER
         void sort();
     private:
         void qsort_r(int lo, int hi);
+        int partition(int i, int j, int p);
         int partition(int i, int j);
 };
 
@@ -71,6 +72,34 @@ void quicksort<CONTAINER_T>::sort(){
     this->qsort_r(0,this->container.size()-1);
 }
 
+#if HOARES_QUICKSORT_PARTITION
+template <typename CONTAINER_T>
+void quicksort<CONTAINER_T>::qsort_r(int lo, int hi){
+    if(lo<hi){
+        int j = lo+(rand()%(hi-lo+1));
+        j = this->partition(lo, hi, j);
+        this->qsort_r(lo,j);
+        this->qsort_r(j+1,hi);
+    }
+}
+
+template <typename CONTAINER_T>
+int quicksort<CONTAINER_T>::partition(int lo, int hi, int p){
+    int i = lo-1;
+    int j = hi+1;
+    int pivot = this->container[p];
+
+    while(true){
+        while(this->container[++i]<pivot);
+        while(this->container[--j]>pivot);
+	if(i>=j)
+	    break;
+        this->swap(this->container[j],this->container[i]);
+    }
+    return j;
+}
+
+#else
 template <typename CONTAINER_T>
 void quicksort<CONTAINER_T>::qsort_r(int lo, int hi){
     if(lo<hi){
@@ -88,13 +117,15 @@ int quicksort<CONTAINER_T>::partition(int lo, int hi){
 
     while(i<j){
         while(this->container[i]<=pivot && i<hi)i++;
-        while(this->container[j]>pivot && j>=lo)j--;
+        while(this->container[j]>pivot && j>lo)j--;
 	if(i<j)
             this->swap(this->container[j],this->container[i]);
     }
     this->swap(this->container[j],this->container[lo]/*aka pivot*/);
+    cout<<"New Pivot is "<<j<<endl;
     return j;
 }
+#endif
 
 /* Merge Sort API */
 template <typename CONTAINER_T>
@@ -162,6 +193,8 @@ int main(void){
    //vector<int> v = {10,9,8,7,6,5,4,3,2,1};
    //vector<int> v = {3,2,3,1,2,4,5,5,6};
    vector<int> v = {1,2,3,4,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-5,-4,-3,-2,-1};
+   //vector<int> v = {5,6,4,1,7,3,5,4,10,6,4,8,2,12,5,5,2,6,1,4};
+   //vector<int> v = {1,1};
    quicksort<int> qs(v);
    cout<<"Array before sorting:"<<endl;
    qs.printcontainer();

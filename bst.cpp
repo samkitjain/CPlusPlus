@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stack>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -35,6 +36,7 @@ class bst{
         bool insert_itr(node<VAL_T> **curr, node<VAL_T>* n);
         void printbst_rec(bool inc, SEARCHORDER ORDER);
         void printbst_itr(SEARCHORDER ORDER);
+        void printbst_bfs();
 	void mirror();
         bool search(VAL_T val);
         int bstdepth();
@@ -145,6 +147,45 @@ bool bst<VAL_T>::insert_itr(node<VAL_T> **curr, node<VAL_T>* n){
 	}
     }
     return true;
+}
+
+/*
+ * There are 2 ways to traverse the BST:
+ *
+ * 1. Depth First Search (DFS): In this we first explore depth. i.e. 
+ *    For each child we explore its entire subtree before visiting next child.
+ *    Uses stack for implementation
+ *
+ *     a. Pre-order Traversal
+ *     b. In-order Traversal
+ *     c. Post-order Traversal
+ *
+ * 2. Breadth First Search (BFS): In this we explore breadth first. i.e. We explore
+ *    all immediate childs first before going to subtrees of childs visited in order.
+ *    Uses FIFO queue for implementation.
+ *
+ */
+
+template<typename VAL_T>
+void bst<VAL_T>::printbst_bfs(){
+
+    queue<node<VAL_T>*> visited;
+    queue<node<VAL_T>*> pending;
+
+    node<VAL_T>* curr = this->root;
+
+    if(curr == nullptr) return;
+    pending.push(curr);
+
+    cout<<"Starting BFS"<<endl;
+    while(!pending.empty()){
+        curr = pending.front();
+	pending.pop();
+	cout<<"Node is "<<curr->val<<endl;
+	if(curr->lchild) pending.push(curr->lchild);
+	if(curr->rchild) pending.push(curr->rchild);
+	visited.push(curr);
+    }
 }
 
 template <typename VAL_T>
@@ -675,6 +716,8 @@ int main(void){
     t.distancebtwnodes(1,2,t.root);
     t.distancebtwnodes(4,4,t.root);
     t.distancebtwnodes(1,1,t.root);
+    
+    t.printbst_bfs();
     
     return 0;
 }
