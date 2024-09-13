@@ -90,7 +90,7 @@ template<typename DATATYPE_T>
 bool ringbuffer<DATATYPE_T>::dequeue_f(){
     if(this->isempty()) return false; 
     
-    int element = this->buffer[this->frontptr];
+    DATATYPE_T element = this->buffer[this->frontptr];
     this->buffer[this->frontptr] = -1;
     cout<<"Dequeued element : "<<element<<endl;
     this->occupancy--;
@@ -102,7 +102,7 @@ template<typename DATATYPE_T>
 bool ringbuffer<DATATYPE_T>::dequeue_r(){
     if(this->isempty()) return false; 
     this->rearptr = (--this->rearptr + this->buffsize) % this->buffsize ;
-    int element = this->buffer[this->rearptr];
+    DATATYPE_T element = this->buffer[this->rearptr];
     this->buffer[this->rearptr] = -1;
     cout<<"Dequeued element : "<<element<<endl;
     this->occupancy--;
