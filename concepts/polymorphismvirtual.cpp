@@ -58,12 +58,17 @@ int square1::area(){
 // derived class doesn't define the virtual function then they also become abstract class
 // and you can't create objects of that derived class !
 //
+// Abstract class CAN HAVE a constructor to initialize its memebers ! Though you can't create
+// objects of abstract class !
+//
 //
 // Virtual template methods are NOT allowed !
 class polygon2{
 
     public:
-        
+
+        ploygon2();
+
         void setdim(int x, int y){this->x=x;this->y=y;}
 	// Define area() as pure virtual function
 	virtual int area() = 0;
@@ -107,7 +112,7 @@ class polygon3{
         
         void setdim(int x, int y){this->x=x;this->y=y;}
 	// Define area() as pure virtual function
-	virtual int area() = 0;
+	virtual float area() = 0;
 	void printxy(){cout<<this->x<<endl;cout<<this->y<<endl;}
     protected:
         T x;
@@ -139,7 +144,8 @@ int main(void){
     square1 s; 
     polygon1 *p1 = &s;
     p1->setdim(6,6);
-    cout<<p1->area()<<endl;
+    cout<<p1->area()<<endl; // Prints 0. Base class pointer cannot access derived class members.
+                            // This is because area() is virtual and NOT pure virtual function.
 
 
     square2 s2; 
@@ -167,8 +173,8 @@ int main(void){
     //
     // Class Template can have pure virtual function. But pure virtual function cannot be templated !
     //
-    square3<int> s3; 
-    polygon3<int>  *p3 = &s3;
+    //square3<int> s3; 
+    //polygon3<int>  *p3 = &s3;
 
 
 

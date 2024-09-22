@@ -78,22 +78,10 @@ bool bst<VAL_T>::insert_rec(node<VAL_T> **curr, node<VAL_T>* n){
 
     if(n->val == (*curr)->val) return false;
 
-    if(n->val < (*curr)->val){
-        if(root->lchild==nullptr){
-	    (*curr)->lchild = n;
-	    success = true;
-	}
-	else
-	    success = insert_rec(&(*curr)->lchild,n);
-    }
-    else{
-        if((*curr)->rchild==nullptr){
-	    (*curr)->rchild = n;
-	    success = true;
-	}
-	else
-	    success = insert_rec(&(*curr)->rchild,n);
-    }
+    if(n->val < (*curr)->val)
+	success = insert_rec(&(*curr)->lchild,n);
+    else
+	success = insert_rec(&(*curr)->rchild,n);
     return success;
 }
 
@@ -106,6 +94,11 @@ bool bst<VAL_T>::push_itr(VAL_T val){
 
 template <typename VAL_T>
 bool bst<VAL_T>::insert_itr(node<VAL_T> **curr, node<VAL_T>* n){
+
+    // TODO : Code can be made simple by just using a prev pointer
+    // Save value of curr_backup in prev and then advance curr_backup
+    // without any checks. While loop will terminate if curr_backup == nullptr
+    // Now simply do prev = n
 
     node<VAL_T> *curr_backup = *curr;
 
@@ -166,9 +159,14 @@ bool bst<VAL_T>::insert_itr(node<VAL_T> **curr, node<VAL_T>* n){
  *
  */
 
+//
+// BFS method
+//
 template<typename VAL_T>
 void bst<VAL_T>::printbst_bfs(){
 
+    // Visted is NOT useful in BST. Only in Graphs !
+    // For normal graph, visited is vector or map
     queue<node<VAL_T>*> visited;
     queue<node<VAL_T>*> pending;
 
@@ -181,6 +179,8 @@ void bst<VAL_T>::printbst_bfs(){
     while(!pending.empty()){
         curr = pending.front();
 	pending.pop();
+	// For Graphs check if current node has been visited
+	// If yes, then continue
 	cout<<"Node is "<<curr->val<<endl;
 	if(curr->lchild) pending.push(curr->lchild);
 	if(curr->rchild) pending.push(curr->rchild);
@@ -188,6 +188,9 @@ void bst<VAL_T>::printbst_bfs(){
     }
 }
 
+//
+// DFS method
+//
 template <typename VAL_T>
 void bst<VAL_T>::printbst_itr(SEARCHORDER ORDER){
     if(ORDER == PRE)
@@ -216,6 +219,9 @@ void bst<VAL_T>::printinorder_itr(node<VAL_T> *curr){
 
 template <typename VAL_T>
 void bst<VAL_T>::printpreorder_itr(node<VAL_T> *curr){
+
+    if(curr == nullptr) return;
+
     stack<node<VAL_T> *>  s;
     s.push(curr);
     while(s.empty() == false){
@@ -228,6 +234,28 @@ void bst<VAL_T>::printpreorder_itr(node<VAL_T> *curr){
 	    s.push(curr->lchild);
     }
 }
+
+/*
+Postorder iterative :
+
+Following implementation uses 2 stacks. This is easiest.
+
+This can also be done using single stack:
+
+1.1 Create an empty stack
+2.1 Do following while root is not NULL
+    a) Push root's right child and then root to stack.
+    b) Set root as root's left child.
+2.2 Pop an item from stack and set it as root.
+    a) If the popped item has a right child and the right child 
+       is at top of stack, then remove the right child from stack,
+       push the root back and set root as root's right child.
+    b) Else print root's data and set root as NULL.
+2.3 Repeat steps 2.1 and 2.2 while stack is not empty.
+
+Source : https://www.geeksforgeeks.org/iterative-postorder-traversal-using-stack/#
+
+*/
 
 template <typename VAL_T>
 void bst<VAL_T>::printpostorder_itr(node<VAL_T> *curr){
@@ -399,7 +427,7 @@ node<VAL_T>* bst<VAL_T>::deletemin(node<VAL_T>*curr){
       node to be deleted with largest node in left
       subtree or with smallest node in right subtree.
       whichever route you take, accordingly check for the
-      case when other of the tree (lchild or rchild is null)
+      case when one child of the tree is NULL (lchild or rchild is null)
  * 3. Delete the min or max node 
  */
 
@@ -408,6 +436,11 @@ void bst<VAL_T>::deletenode(VAL_T val){
     this->root = deletenodek(val, this->root);
 }
 
+//
+// Following is recurssive deletek.
+//
+// Iterative deletek is avaialble here : https://www.geeksforgeeks.org/binary-search-tree-set-3-iterative-delete/
+// 
 template<typename VAL_T>
 node<VAL_T>* bst<VAL_T>::deletenodek(VAL_T val, node<VAL_T> *curr){
     
@@ -421,7 +454,7 @@ node<VAL_T>* bst<VAL_T>::deletenodek(VAL_T val, node<VAL_T> *curr){
 	else{ // Target node found ! Start removal process
 	      // 4 case: either child present, both absent, both present
 
-              // Left child absent
+              // Left child absent. This also covers case even right is null
 	      if(!curr->lchild){
 	          // delete current and return left->right
 		  node<VAL_T>* n = curr->rchild;
@@ -681,7 +714,11 @@ int main(void){
 //    t.printbst_rec(true/* Increasing order -> True else False*/, PRE);
 //    t.printbst_itr(POST);
 
+    cout<<"------INTR--------------"<<endl;
     t.printbst_itr(POST);
+    cout<<"-----------------------"<<endl;
+    cout<<"------REC--------------"<<endl;
+    t.printbst_rec(true,POST);
     cout<<"-----------------------"<<endl;
 
     t.mirror();

@@ -80,12 +80,19 @@ template <class T>
 void heap<T>::rise(int idx){
 
     int i = idx;
-    while(i<this->occupancy && this->compare(this,i,(i-1)/2)){
+    while(i>0 && this->compare(this,i,(i-1)/2)){
 	this->swap(i, (i-1)/2);
 	i=(i-1)/2;
     }
 }
 
+
+//
+// Worst Complexity is : O(log N)
+// Best Complexity is  : O(1)
+// 
+// Add element to the leaf and make it rise (upwards)
+//
 
 template<class T>
 void heap<T>::push(T val){
@@ -99,7 +106,7 @@ template <class T>
 void heap<T>::sink(int idx){
     int i= idx;
 
-    while( i < this->space.size()){
+    while( i < this->occupancy){
         // Find the biggest of 2 child nodes of parent node i
         if(2*i+1 < this->occupancy && (2*i+2) < this->occupancy ){
 	    if(this->compare(this,i*2+1,i*2+2)){
@@ -137,6 +144,14 @@ void heap<T>::sink(int idx){
     }
 }
 
+//
+// Obtaining min/max element time complexity : O(1)
+// But we have to rebalance heap. Time complexity for balancing is : O(logN)
+//
+// Overall Complexity is : O(logN)
+// 
+// Remove top. Copy last leaf element in the top and sink top to bottom.
+//
 template<class T>
 T heap<T>::pop(){
 
@@ -151,6 +166,8 @@ T heap<T>::pop(){
     return val; 
 }
 
+
+// Worst Complexity is : O(N) if you use sink(). It becomes O(NlogN) if we use rise() approach.
 template<typename T>
 void heap<T>::heapify(){
     for(int i=this->occupancy;i>=0;i--)
@@ -158,6 +175,12 @@ void heap<T>::heapify(){
 }
 
 
+//
+// Worst Complexity is : O(log N) to add element to heap. So O(N logN) to create entire heap.
+// Worst Complexity is : O(log N) to pop element from heap. So O(N logN) to remove all elements and add to sorted array
+// 
+// Avg and worst complexity is same for heapsort 
+//
 template<typename T>
 void heap<T>::heapsort(){
     if(this->occupancy == 0)
@@ -192,6 +215,11 @@ int main(void){
     h2.printheap();
     h2.heapify();
     h2.printheap();
+    cout<<h2.pop()<<endl;
+    cout<<h2.pop()<<endl;
+    cout<<h2.pop()<<endl;
+    cout<<h2.pop()<<endl;
+    cout<<h2.pop()<<endl;
 
     vector<int> v1 = {8,7,9,2,11};
 
